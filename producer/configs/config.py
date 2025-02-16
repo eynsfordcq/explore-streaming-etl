@@ -2,7 +2,7 @@
 random_user_url = "https://randomuser.me/api/?results=1"
 
 # kafka related
-kafka_bootstrap_servers = ["localhost:9092"]
+kafka_bootstrap_servers = ["kafka:9092"]
 kafka_topic = "users"
 
 # app related
