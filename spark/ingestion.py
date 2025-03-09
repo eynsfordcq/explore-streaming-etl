@@ -11,6 +11,11 @@ spark = SparkSession \
     .builder \
     .master("local[*]") \
     .appName("SparkIngestion") \
+    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
+    .config("spark.hadoop.fs.s3a.access.key", "minio") \
+    .config("spark.hadoop.fs.s3a.secret.key", "minio123") \
+    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
+    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .getOrCreate()
 
 def read_stream_df():
@@ -44,8 +49,8 @@ def write_stream_df(df):
     query = df.writeStream \
         .format("csv") \
         .outputMode("append") \
-        .option("path", output_directory) \
-        .option("checkpointLocation", checkpoint_directory) \
+        .option("path", "s3a://users/output/") \
+        .option("checkpointLocation", "s3a://users/checkpoints/") \
         .trigger(processingTime="10 seconds") \
         .start()
     
